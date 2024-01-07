@@ -1,59 +1,91 @@
-#@Dev_aladinh production
-#Hang'man game
-import random
+#Dev_@ladinh production
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
 
 class Hangman:
-    def __init__ (self, word_list, max_attempts = 6):
-        self.secret_word = random.choice(word_list)
+    def __init__(self, secret_word, max_attempts = 6):
+        self.secret_word = secret_word
         self.guessed_letters = []
         self.attempts = max_attempts
 
     def display_word(self):
-        display = ''
-        for letter in self.secret_word:
-            if letter in self.guessed_letters:
-                display += letter
-            else:
-                display += '_'
-        return display
+        return ''.join([letter if letter in self.guessed_letters else '_' for letter in self.secret_word])
 
-    def get_player_guess(self):
-        guess = input("Guess a letter: ")
-        return guess.lower()
-
-    def is_guess_correct(self, guessed_letter):
-        return guessed_letter in self.secret_word
-
-    def play(self):
-        print("\nHelloh! Welcome to the Hang'man game.")
-        print("The game bassically entails you choosing a letter for you to match the exact the letters of the secret word chosen by J.A.R.V.I.S  AI")
-
-        while self.attempts > 0:
-            print("\nCurrent Word:", self.display_word())
-            guess = self.get_player_guess()
-
-            if guess in self.guessed_letters:
-                print("Oh sorry, you already guessed the letter. Try again.")
-                continue
-
-            self.guessed_letters.append(guess)
-
-            if self.is_guess_correct(guess):
-                print("Congrats, your guess was right!")
-            else:
-                print("Oh sorry, incorrect guess. Please try again.")
+    def guess(self, letter):
+        if letter not in self.guessed_letters:
+            self.guessed_letters.append(letter)
+            if letter not in self.secret_word:
                 self.attempts -= 1
 
-            if "_" not in self.display_word():
-                print("\nCongratulations pall!")
-                print("You guessed the correct letters for the secret word: '", self.secret_word, "'\n")
-                break
-            
-        if self.attempts == 0:
-            print("\nOh sorry, you ran out of attempts. The secret_word was: '", self.secret_word, "'")
-            print("I hope you'll try your best next time, lol.\n")
-            
-word_list = ["challenge", "hangman", "programming", "python", "javascript", "code", "identity"]
-game = Hangman(word_list)
-game.play()
+    def is_game_over(self):
+        return self.attempts <= 0 or self.is_word_guessed()
 
+    def is_word_guessed(self):
+        return all(letter in self.guessed_letters for letter in self.secret_word)
+
+
+class HangmanApp:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("@Dev_aladinh production")
+
+        style = ttk.Style()
+        style.configure("TLabel", background="lightblue", font=("Helvetica", 12))
+        style.configure("Title.TLabel", font=("Helvetica", 20, "bold"))
+        style.configure("TButton", foreground="blue", background="red", font=("Helvetica", 10), padding = 5)
+        style.configure("TEntry", font=("Helvetica", 14))
+
+        self.game = Hangman("programming")  
+        
+        self.title_label = ttk.Label(master, text="**Hang'man Game**", font=("Helvetica", 20, "bold"))
+        self.title_label.pack(pady=10)
+    
+        self.title_label = ttk.Label(master, text="Welcome to the game, You need to choose a letter for you to guess the exact letters of the word.\nSuccess pall! You need to compete with the number of attempts left", font=("Helvetica", 10))
+        self.title_label.pack(pady=10)
+
+        self.word_label = ttk.Label(master, text=self.game.display_word(), font=("Helvetica", 16))
+        self.word_label.pack(pady=10)
+
+        self.guess_entry = ttk.Entry(master, font=("Helvetica", 14))
+        self.guess_entry.pack(pady=10)
+
+        self.guess_button = ttk.Button(master, text="Submit Guess", command=self.make_guess)
+        self.guess_button.pack(pady=10)
+
+        self.attempts_label = ttk.Label(master, text=f"Attempts left: {self.game.attempts}", font=("Helvetica", 12))
+        self.attempts_label.pack(pady=10)
+        
+        self.exit_button = ttk.Button(master, text=" Exit ", command=self.master.destroy)
+        self.exit_button.place(x=255, y=350)
+        
+    def make_guess(self):
+        guess = self.guess_entry.get().lower()
+        self.guess_entry.delete(0, tk.END)
+
+        if len(guess) == 1 and guess.isalpha():
+            if not self.game.guess(guess):
+                messagebox.showerror("DNI Oops!", "Incorrect Guess, that letter is not in the word.")
+            self.update_display()
+        else:
+            messagebox.showerror("DNI Invalid Input", "Please enter a single alphabetic character.")
+
+    def update_display(self):
+        self.word_label.config(text=self.game.display_word())
+        self.attempts_label.config(text=f"Attempts left: {self.game.attempts}")
+
+        if self.game.is_game_over():
+            self.show_game_result()
+
+    def show_game_result(self):
+        result_text = "Congratulations pall! You guessed the word correctlly." if self.game.is_word_guessed() else "Sorry, you ran out of attempts. \nThe secret_word was: " + self.game.secret_word
+        result_label = tk.Label(self.master, text=result_text, background="lightblue", font=("Helvetica", 14))
+        result_label.pack(pady = 20)
+        self.guess_button.config(state=tk.DISABLED)
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    root.configure(background = "lightblue")
+    root.geometry('600x550')
+    app = HangmanApp(root)
+    root.mainloop()
