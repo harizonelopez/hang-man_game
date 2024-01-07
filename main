@@ -1,3 +1,5 @@
+#@Dev_aladinh production
+#Hang'man game
 import random
 
 class Hangman:
@@ -23,30 +25,35 @@ class Hangman:
         return guessed_letter in self.secret_word
 
     def play(self):
-        print("Welcome to Hangman!")
+        print("\nHelloh! Welcome to the Hang'man game.")
+        print("The game bassically entails you choosing a letter for you to match the exact the letters of the secret word chosen by J.A.R.V.I.S  AI")
 
         while self.attempts > 0:
             print("\nCurrent Word:", self.display_word())
             guess = self.get_player_guess()
 
             if guess in self.guessed_letters:
-                print("You already guessed that letter. Try again.")
+                print("Oh sorry, you already guessed the letter. Try again.")
                 continue
 
             self.guessed_letters.append(guess)
 
             if self.is_guess_correct(guess):
-                print("Good guess!")
+                print("Congrats, your guess was right!")
             else:
-                print("Incorrect guess. Try again.")
+                print("Oh sorry, incorrect guess. Please try again.")
                 self.attempts -= 1
 
             if "_" not in self.display_word():
-                print("\nCongratulations! You guessed the word:", self.secret_word)
+                print("\nCongratulations pall!")
+                print("You guessed the correct letters for the secret word: '", self.secret_word, "'\n")
                 break
-
+            
         if self.attempts == 0:
-            print("\nSorry, you ran out of attempts. The word was:", self.secret_word)
-word_list = ["programming", "python", "hangman", "challenge", "javascript", "code", "identity"]
+            print("\nOh sorry, you ran out of attempts. The secret_word was: '", self.secret_word, "'")
+            print("I hope you'll try your best next time, lol.\n")
+            
+word_list = ["challenge", "hangman", "programming", "python", "javascript", "code", "identity"]
 game = Hangman(word_list)
 game.play()
+
