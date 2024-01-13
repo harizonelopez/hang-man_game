@@ -1,4 +1,5 @@
 #Dev_@ladinh production
+
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -23,7 +24,6 @@ class Hangman:
 
     def is_word_guessed(self):
         return all(letter in self.guessed_letters for letter in self.secret_word)
-
 
 class HangmanApp:
     def __init__(self, master):
