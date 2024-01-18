@@ -55,7 +55,7 @@ class HangmanApp:
 
         self.attempts_label = ttk.Label(master, text=f"Attempts left: {self.game.attempts}", font=("Helvetica", 12))
         self.attempts_label.pack(pady=10)
-        
+
         self.exit_button = ttk.Button(master, text=" Exit ", command=self.master.destroy)
         self.exit_button.place(x=255, y=350)
         
