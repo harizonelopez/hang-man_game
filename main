@@ -64,7 +64,7 @@ class HangmanApp:
         self.guess_entry.delete(0, tk.END)
 
         if len(guess) == 1 and guess.isalpha():
-            if not self.game.guess(guess):
+            if not self.game.guess(guess) and guess not in self.game.secret_word:
                 messagebox.showerror("DNI Oops!", "Incorrect Guess, that letter is not in the word.")
             self.update_display()
         else:
@@ -73,7 +73,7 @@ class HangmanApp:
     def update_display(self):
         self.word_label.config(text=self.game.display_word())
         self.attempts_label.config(text=f"Attempts left: {self.game.attempts}")
-
+        
         if self.game.is_game_over():
             self.show_game_result()
 
