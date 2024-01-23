@@ -1,11 +1,14 @@
-#Dev_@ladinh production
+# Dev_@ladinh production
+# hang'man game
+# It mainly entails guessing the letters of a random word which is set by the system
 
 import tkinter as tk
 from tkinter import ttk
+from tkinter import *
 from tkinter import messagebox
 
-class Hangman:
-    def __init__(self, secret_word, max_attempts = 6):
+class Hangman_game:
+    def __init__(self, secret_word, max_attempts = 5):
         self.secret_word = secret_word
         self.guessed_letters = []
         self.attempts = max_attempts
@@ -21,7 +24,7 @@ class Hangman:
 
     def is_game_over(self):
         return self.attempts <= 0 or self.is_word_guessed()
-
+            
     def is_word_guessed(self):
         return all(letter in self.guessed_letters for letter in self.secret_word)
 
@@ -36,7 +39,7 @@ class HangmanApp:
         style.configure("TButton", foreground="blue", background="red", font=("Helvetica", 10), padding = 5)
         style.configure("TEntry", font=("Helvetica", 14))
 
-        self.game = Hangman("programming")  
+        self.game = Hangman_game("encapsulation")  
         
         self.title_label = ttk.Label(master, text="**Hang'man Game**", font=("Helvetica", 20, "bold"))
         self.title_label.pack(pady=10)
@@ -85,6 +88,7 @@ class HangmanApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.resizable(False, False)
     root.configure(background = "lightblue")
     root.geometry('600x550')
     app = HangmanApp(root)
